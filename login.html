@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Вход</title>
+<link rel="stylesheet" href="style.css">
+<script src="script.js" defer></script>
+</head>
+<body>
+
+<div class="menu-container">
+    <h1>Вход</h1>
+    <input type="text" id="login-username" placeholder="Имя пользователя" style="margin-bottom: 20px;">
+    <input type="password" id="login-password" placeholder="Пароль" style="margin-bottom: 20px;">
+    <div class="menu-row">
+        <button onclick="loginUser(document.getElementById('login-username').value, document.getElementById('login-password').value)">Войти</button>
+        <button onclick="window.location.href='index.html'">Назад</button>
+    </div>
+</div>
+
+<button id="music-btn" onclick="toggleMusic()">🔊 ON</button>
+<audio id="bg-music" loop>
+    <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Math Detective - Игра</title>
+<link rel="stylesheet" href="style.css">
+<script src="script.js" defer></script>
+<style>
+body{margin:0;font-family:'Press Start 2P',cursive;background:url('game_photo.jpg') no-repeat center center fixed;background-size:cover;color:white;}
+.game-container{width:80%;max-width:600px;margin:100px auto;text-align:center;position:relative;}
+.task-box{position:relative;background:rgba(0,0,0,0.8);padding:30px;border-radius:15px;font-size:18px;margin-bottom:20px;}
+.story-overlay{position:absolute;top:0;left:50%;transform:translateX(-50%);width:90%;background:rgba(0,0,0,0.7);padding:15px 20px;border-radius:15px;font-size:16px;text-align:center;pointer-events:none;}
+input[type=number]{padding:10px;width:50%;margin:20px 0;border-radius:8px;border:none;font-size:16px;}
+.menu-row{display:flex;justify-content:center;gap:20px;margin-bottom:20px;}
+.menu-row button,.lang-switch button{background:#4CAF50;color:white;border:none;padding:12px 20px;border-radius:12px;cursor:pointer;font-weight:bold;}
+.menu-row button:hover,.lang-switch button:hover{background:#45a049;}
+.lang-switch{position:absolute;top:10px;right:10px;}
+</style>
+</head>
+<body>
+
+<div class="lang-switch">
+    <button onclick="setLang('kz')">Қазақша</button>
+    <button onclick="setLang('ru')">Русский</button>
+</div>
+
+<div class="game-container">
+    <div class="task-box" id="task">Задача появится здесь</div>
+    <div class="story-overlay" id="story">Предыстория появится здесь</div>
+    <input type="number" id="answer" placeholder="Ваш ответ">
+    <div class="menu-row">
+        <button onclick="submitAnswer()">Ответить</button>
+        <button onclick="window.location.href='index.html'">Меню</button>
+    </div>
+    <p>Очки: <span id="points">0</span></p>
+    <p>Попытки неверных ответов: <span id="wrongStreak">0</span></p>
+</div>
+
+<button id="music-btn" onclick="toggleMusic()">🔊 ON</button>
+<audio id="bg-music" loop>
+    <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+</body>
+</html>

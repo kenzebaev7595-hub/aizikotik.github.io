@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="style.css">
+<script src="script.js"></script>
+<style>
+body {
+    background: url("victory_photo.jpg") no-repeat center center fixed;
+    background-size: cover;
+    text-align: center;
+    color: gold;
+    font-size: 30px;
+}
+</style>
+</head>
+<body>
+
+<a href="index.html" class="menu-btn">Меню</a>
+<button id="music-btn" onclick="toggleMusic()">🔊 ON</button>
+<audio id="bg-music" loop>
+    <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<h1>🎉 Вы победили! 🎉</h1>
+<p>Очки: <span id="finalPoints"></span></p>
+<p>Попытки ответов: <span id="totalAttempts"></span></p>
+
+<script>
+document.getElementById("finalPoints").innerText = localStorage.getItem("points") || 0;
+document.getElementById("totalAttempts").innerText = localStorage.getItem("attempts") || 0;
+</script>
+
+</body>
+</html>
