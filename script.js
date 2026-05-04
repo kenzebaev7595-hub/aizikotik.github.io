@@ -1,3 +1,4 @@
+
 // -------------------- FIREBASE --------------------
 const firebaseConfig = {
     apiKey: "AIzaSyDu2ioUgqEKB63EkiMrQ6w4NDbkFtoYuWk",
@@ -13,25 +14,37 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
 
-// -------------------- ИГРОВОЙ СТАТУС --------------------
+// -------------------- ИГРА --------------------
 let level = 1;
 let points = 0;
 let attempts = 0;
 let wrongStreak = 0;
 
 
-// -------------------- УРОВНИ (Firebase sync) --------------------
+// -------------------- УРОВНИ --------------------
 let levelsData = [];
 
-// загрузка уровней с Firebase
 db.ref("levels").on("value", snap => {
-    if (snap.val()) {
-        levelsData = Object.values(snap.val());
+    levelsData = [];
+
+    let data = snap.val();
+
+    if (data) {
+        for (let key in data) {
+            levelsData.push({
+                key: key,
+                ...data[key]
+            });
+        }
+    }
+
+    if (document.getElementById("task")) {
+        showTask();
     }
 });
 
 
-// -------------------- РЕГИСТРАЦИЯ / ВХОД --------------------
+// -------------------- РЕГИСТРАЦИЯ --------------------
 function saveUser(username, password) {
     let users = JSON.parse(localStorage.getItem("users")) || [];
 
@@ -47,6 +60,8 @@ function saveUser(username, password) {
     window.location.href = "index.html";
 }
 
+
+// -------------------- ВХОД --------------------
 function loginUser(username, password) {
     let users = JSON.parse(localStorage.getItem("users")) || [];
 
@@ -77,7 +92,7 @@ function startNewGame() {
 }
 
 
-// -------------------- ЛОГИ (FIREBASE) --------------------
+// -------------------- ЛОГИ --------------------
 function saveLog(answer, correct) {
     let username = localStorage.getItem("currentUser") || "guest";
 
@@ -101,17 +116,18 @@ function setLang(lang) {
 }
 
 
-// -------------------- ПОКАЗ ЗАДАЧ --------------------
+// -------------------- ПОКАЗ ЗАДАЧИ --------------------
 function showTask() {
+    if (!levelsData.length) return;
+
     if (level - 1 < levelsData.length) {
 
-        document.getElementById("task").innerText =
-            levelsData[level - 1].task;
+        let l = levelsData[level - 1];
+
+        document.getElementById("task").innerText = l.task;
 
         document.getElementById("story").innerText =
-            currentLang === "kz"
-                ? levelsData[level - 1].storyKZ
-                : levelsData[level - 1].storyRU;
+            currentLang === "kz" ? l.storyKZ : l.storyRU;
 
         document.getElementById("answer").value = "";
         document.getElementById("points").innerText = points;
@@ -129,7 +145,11 @@ function submitAnswer() {
 
     attempts++;
 
-    if (userAnswer === levelsData[level - 1].answer) {
+    let current = levelsData[level - 1];
+
+    if (!current) return;
+
+    if (userAnswer === current.answer) {
         points += 400;
         wrongStreak = 0;
 
@@ -155,7 +175,7 @@ function submitAnswer() {
 }
 
 
-// -------------------- АДМИН: ЛОГИ --------------------
+// -------------------- АДМИН ЛОГИ --------------------
 function loadAdmin() {
     let container = document.getElementById("logs");
 
@@ -163,6 +183,7 @@ function loadAdmin() {
         container.innerHTML = "";
 
         let data = snap.val();
+
         for (let key in data) {
             let l = data[key];
 
@@ -180,7 +201,7 @@ function loadAdmin() {
 }
 
 
-// -------------------- АДМИН: УРОВНИ (ОБНОВЛЕНИЕ) --------------------
+// -------------------- ДОБАВИТЬ УРОВЕНЬ --------------------
 function addLevel(task, answer, storyRU, storyKZ) {
     db.ref("levels").push({
         task,
@@ -190,24 +211,27 @@ function addLevel(task, answer, storyRU, storyKZ) {
     });
 }
 
-function updateLevel(key, data) {
-    db.ref("levels/" + key).set(data);
+
+// -------------------- ОБНОВИТЬ УРОВЕНЬ --------------------
+function updateLevel(key, task, answer, storyRU, storyKZ) {
+    db.ref("levels/" + key).update({
+        task,
+        answer: Number(answer),
+        storyRU,
+        storyKZ
+    });
 }
 
+
+// -------------------- УДАЛИТЬ --------------------
 function deleteLevel(key) {
     db.ref("levels/" + key).remove();
 }
 
 
-// -------------------- ЗАПУСК --------------------
-document.addEventListener("DOMContentLoaded", () => {
-    if (document.getElementById("task")) showTask();
-    if (document.getElementById("logs")) loadAdmin();
-});
-
-
 // -------------------- МУЗЫКА --------------------
 document.addEventListener("DOMContentLoaded", function () {
+
     let music = document.getElementById("bg-music");
     let btn = document.getElementById("music-btn");
 
@@ -233,4 +257,11 @@ document.addEventListener("DOMContentLoaded", function () {
             localStorage.setItem("musicState", "off");
         }
     };
+});
+
+
+// -------------------- ЗАПУСК --------------------
+document.addEventListener("DOMContentLoaded", () => {
+    if (document.getElementById("task")) showTask();
+    if (document.getElementById("logs")) loadAdmin();
 });
