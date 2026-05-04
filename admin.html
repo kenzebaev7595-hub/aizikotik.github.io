@@ -1,21 +1,53 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link rel="stylesheet" href="style.css">
-<script src="script.js"></script>
+    <meta charset="UTF-8">
+    <title>Админка</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- 🔥 Firebase (обязательно ДО script.js) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-database-compat.js"></script>
+
+    <!-- ⚠️ ВАЖНО: defer -->
+    <script src="script.js" defer></script>
 </head>
+
 <body>
 
 <a href="index.html" class="menu-btn">Меню</a>
 <button id="music-btn" onclick="toggleMusic()">🔊 ON</button>
+
 <audio id="bg-music" loop>
     <source src="music.mp3" type="audio/mpeg">
 </audio>
 
-<h2>Админка</h2>
-<div id="logs"></div>
-<button onclick="clearLogs()">Очистить логи</button>
+<h2>🛠 Админка</h2>
 
-<script>loadAdmin();</script>
+<!-- -------------------- УРОВНИ -------------------- -->
+<h3>Управление уровнями</h3>
+
+<button onclick="addLevel()">➕ Добавить уровень</button>
+
+<div id="levels"></div>
+
+<hr>
+
+<!-- -------------------- ЛОГИ -------------------- -->
+<h3>Логи игроков</h3>
+
+<button onclick="clearLogs()">🧹 Очистить логи</button>
+
+<div id="logs"></div>
+
+<!-- -------------------- ЗАПУСК -------------------- -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    loadAdmin();
+    loadLevelsAdmin();
+});
+</script>
+
 </body>
 </html>
